@@ -1,8 +1,7 @@
-function App() {
+import { Widget } from "./components/Widget";
 
-  return (
-    <button>Ola</button>
-  )
+function App() {
+  return <Widget />
 }
 
 export default App
