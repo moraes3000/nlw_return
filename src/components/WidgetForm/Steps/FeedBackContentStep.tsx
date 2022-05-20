@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 import { FeedbackType, feadBackTypes } from "..";
 import { api } from "../../../lib/api";
 import { ClouseButton } from "../../CloseButton"
+import { Loading } from "../Loading";
 import { ScreenshotButton } from "../ScreenshotButton";
 
 
@@ -16,10 +17,11 @@ export function FeedBackContentStep({ feedbackType, onFeedBackRestartResquested,
   const feedbackTypeInfo = feadBackTypes[feedbackType];
   const [screenshot, setScreenshot] = useState<string | null>(null)
   const [comments, setComments] = useState('')
+  const [isSendingFeedback, setIsSendingFeedback] = useState(false)
 
   async function handleSubmitFeedback(event: FormEvent) {
     event.preventDefault()
-
+    setIsSendingFeedback(true)
     console.log({
       type: feedbackType,
       screenshot, comments
@@ -31,7 +33,7 @@ export function FeedBackContentStep({ feedbackType, onFeedBackRestartResquested,
       screenshot
     })
 
-
+    setIsSendingFeedback(false)
     onFeedbackSend()
   }
 
@@ -61,11 +63,12 @@ export function FeedBackContentStep({ feedbackType, onFeedBackRestartResquested,
         <footer className="flex  gap-2 mt-2">
           <ScreenshotButton onScreenshotTook={setScreenshot} screenshot={screenshot} />
           <button
-            disabled={comments.length === 0}
+            disabled={comments.length === 0 || isSendingFeedback}
             type='submit'
             className='p-2 bg-brand-500 rounded-md border-transparent flex-1 flex justify-center items-center text-sm hover:bg-brand-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-brand-500 transition-colors  disabled:opacity-50 disabled:hover:bg-brand-300'
           >
-            Enviar Feedback
+            {isSendingFeedback ? <Loading /> : 'Enviar Feedback'}
+
           </button>
         </footer>
 
